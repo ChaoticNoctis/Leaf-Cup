@@ -125,9 +125,15 @@
             <div class="col-md-6">
               <label class="form-label">Категория</label>
               <select class="form-select" id="editProductCategory">
-                <option>Чёрный</option><option>Зелёный</option><option>Белый</option>
-                <option>Улун</option><option>Пуэр</option><option>Мате</option>
-                <option>Габа</option><option>Подарочные наборы</option><option>Чайные церемонии</option>
+                <option value="1">Чёрный</option>
+                <option value="2">Зелёный</option>
+                <option value="3">Белый</option>
+                <option value="4">Улун</option>
+                <option value="5">Пуэр</option>
+                <option value="6">Мате</option>
+                <option value="7">Габа</option>
+                <option value="8">Подарочные наборы</option>
+                <option value="9">Чайные церемонии</option>
               </select>
             </div>
             <div class="col-md-4">
@@ -146,6 +152,20 @@
               <label class="form-label">Описание</label>
               <textarea class="form-control" id="editProductDesc" rows="3"></textarea>
             </div>
+            <div class="col-12">
+              <label class="form-label">Изображение товара</label>
+              <select class="form-select" id="editProductImage">
+                <option value="images/black-tea.jpg">Чёрный чай</option>
+                <option value="images/green-tea.jpg">Зелёный чай</option>
+                <option value="images/white-tea.jpg">Белый чай</option>
+                <option value="images/oolong.jpg">Улун</option>
+                <option value="images/puer.jpg">Пуэр</option>
+                <option value="images/mate.jpg">Мате</option>
+                <option value="images/gaba.jpg">Габа</option>
+                <option value="images/gifts.jpg">Подарочные наборы</option>
+                <option value="images/ceremony.jpg">Чайные церемонии</option>
+              </select>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -163,7 +183,6 @@
   <script src="js/cart.js"></script>
   <script src="js/app.js"></script>
   <script>
-    if (!requireAdmin()) { /* redirect handled */ }
 
     const STATUS_LIST = ['Новый', 'В обработке', 'Доставляется', 'Выполнен', 'Отменён'];
     const STATUS_COLORS = { 'В обработке': 'warning', 'Доставляется': 'info', 'Выполнен': 'success', 'Отменён': 'danger', 'Новый': 'secondary' };
@@ -254,18 +273,21 @@
         document.getElementById('productModalTitle').textContent = 'Редактировать товар';
         document.getElementById('editProductId').value       = p.id;
         document.getElementById('editProductName').value     = p.name;
-        document.getElementById('editProductCategory').value = p.category;
+        document.getElementById('editProductCategory').value = p.category_id;
         document.getElementById('editProductPrice').value    = p.price;
         document.getElementById('editProductWeight').value   = p.weight;
         document.getElementById('editProductStock').value    = p.stock;
         document.getElementById('editProductDesc').value     = p.description;
+        document.getElementById('editProductImage').value    = p.image_url || 'images/green-tea.jpg';
       } else {
         document.getElementById('productModalTitle').textContent = 'Добавить товар';
         document.getElementById('editProductId').value = '';
-        ['Name','Category','Price','Weight','Stock','Desc'].forEach(f => {
+        ['Name','Price','Weight','Stock','Desc'].forEach(f => {
           const el = document.getElementById('editProduct' + f);
           if (el) el.value = '';
         });
+        document.getElementById('editProductCategory').value = '1';
+        document.getElementById('editProductImage').value = 'images/green-tea.jpg';
       }
       modal.show();
     }
@@ -274,14 +296,15 @@
       const id    = document.getElementById('editProductId').value;
       const data  = {
         name:        document.getElementById('editProductName').value.trim(),
-        category:    document.getElementById('editProductCategory').value,
+        category_id: parseInt(document.getElementById('editProductCategory').value),
         price:       parseInt(document.getElementById('editProductPrice').value) || 0,
         weight:      parseInt(document.getElementById('editProductWeight').value) || 0,
         stock:       parseInt(document.getElementById('editProductStock').value) || 0,
         description: document.getElementById('editProductDesc').value.trim(),
-        image:       'images/green-tea.jpg',
+        image_url:   document.getElementById('editProductImage').value,
       };
       if (!data.name) { alert('Введите название товара'); return; }
+      if (!data.price) { alert('Введите цену товара'); return; }
       try {
         if (id) { await ProductAPI.update(parseInt(id), data); }
         else     { await ProductAPI.create(data); }

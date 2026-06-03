@@ -131,7 +131,7 @@
           </div>
           <hr class="my-2">
           <div class="small text-muted mb-2">
-            ${o.items.map(i => `${i.name} × ${i.qty}`).join(', ')}
+            ${(o.order_items || []).map(i => `${i.name} × ${i.quantity}`).join(', ')}
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <span class="text-muted small"><i class="bi bi-geo-alt me-1"></i>${o.address}</span>
