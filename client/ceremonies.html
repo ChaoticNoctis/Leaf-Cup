@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Чайные церемонии — Leaf&Cup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="/"><img src="images/logo.png" alt="Leaf&Cup" height="70"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/">О нас</a></li>
+          <li class="nav-item"><a class="nav-link" href="/catalog">Каталог</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/ceremonies">Чайные церемонии</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sales">Акции</a></li>
+        </ul>
+        <a href="/cart" class="btn btn-outline-success me-2 position-relative">
+          <i class="bi bi-bag"></i>
+          <span class="cart-badge badge bg-danger" id="cartCount" style="display:none">0</span>
+        </a>
+        <div id="authBtn"><a href="/" class="btn btn-success">Войти</a></div>
+        <div id="userMenu" style="display:none">
+          <div class="dropdown">
+            <button class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-person-circle me-1"></i><span id="userNameHeader"></span></button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/account">Личный кабинет</a></li>
+              <li id="adminMenuItem" style="display:none"><a class="dropdown-item" href="/admin">Панель администратора</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Выйти</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="py-5 text-center text-white" style="background:linear-gradient(135deg,#2d3a1e,#596b3c);min-height:320px;display:flex;align-items:center;">
+    <div class="container">
+      <h1 class="fw-bold display-5 mb-3">Чайные церемонии</h1>
+      <p class="fs-5 opacity-75 mb-4">Погрузитесь в мир традиционной чайной культуры вместе с нашими мастерами</p>
+      <a href="/catalog?category=%D0%A7%D0%B0%D0%B9%D0%BD%D1%8B%D0%B5+%D1%86%D0%B5%D1%80%D0%B5%D0%BC%D0%BE%D0%BD%D0%B8%D0%B8" class="btn btn-light btn-lg fw-semibold">Записаться на церемонию</a>
+    </div>
+  </div>
+
+  <div class="container py-5">
+
+    <!-- Форматы -->
+    <h3 class="fw-bold text-center mb-4">Форматы церемоний</h3>
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4">
+          <div class="text-success fs-1 mb-3"><i class="bi bi-person"></i></div>
+          <h5 class="fw-bold">Индивидуальная</h5>
+          <p class="text-muted">Гун Фу Ча — традиционная китайская церемония один на один с мастером. 2 часа, 4–6 сортов чая, полное погружение в культуру.</p>
+          <div class="fw-bold text-success fs-5 mt-auto">3 500 ₽</div>
+          <a href="/catalog?category=%D0%A7%D0%B0%D0%B9%D0%BD%D1%8B%D0%B5+%D1%86%D0%B5%D1%80%D0%B5%D0%BC%D0%BE%D0%BD%D0%B8%D0%B8" class="btn btn-success mt-3">Заказать</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4 border-success" style="border:2px solid #596b3c !important">
+          <div class="badge bg-success mb-2">Популярное</div>
+          <div class="text-success fs-1 mb-3"><i class="bi bi-people"></i></div>
+          <h5 class="fw-bold">Для двоих</h5>
+          <p class="text-muted">Романтическая церемония для двух человек с закусками и авторским чайным паттингом. Незабываемый вечер.</p>
+          <div class="fw-bold text-success fs-5 mt-auto">2 800 ₽</div>
+          <a href="/catalog?category=%D0%A7%D0%B0%D0%B9%D0%BD%D1%8B%D0%B5+%D1%86%D0%B5%D1%80%D0%B5%D0%BC%D0%BE%D0%BD%D0%B8%D0%B8" class="btn btn-success mt-3">Заказать</a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4">
+          <div class="text-success fs-1 mb-3"><i class="bi bi-people-fill"></i></div>
+          <h5 class="fw-bold">Групповая</h5>
+          <p class="text-muted">Церемония для компании 4–8 человек. Отлично подходит для корпоративов, дней рождений и особых событий.</p>
+          <div class="fw-bold text-success fs-5 mt-auto">от 1 500 ₽/чел.</div>
+          <a href="#contact" class="btn btn-outline-success mt-3">Уточнить детали</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Как это проходит -->
+    <div class="bg-light rounded-4 p-4 p-md-5 mb-5">
+      <h3 class="fw-bold mb-4 text-center">Как проходит церемония</h3>
+      <div class="row g-4">
+        <div class="col-sm-6 col-lg-3 text-center">
+          <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;font-size:1.4rem;font-weight:700">1</div>
+          <h6 class="fw-bold">Встреча</h6>
+          <p class="text-muted small">Мастер знакомит вас с историей выбранного чая и рассказывает об инструментах</p>
+        </div>
+        <div class="col-sm-6 col-lg-3 text-center">
+          <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;font-size:1.4rem;font-weight:700">2</div>
+          <h6 class="fw-bold">Подготовка</h6>
+          <p class="text-muted small">Прогрев посуды, первая промывка чайного листа — пробуждение вкуса</p>
+        </div>
+        <div class="col-sm-6 col-lg-3 text-center">
+          <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;font-size:1.4rem;font-weight:700">3</div>
+          <h6 class="fw-bold">Заваривание</h6>
+          <p class="text-muted small">Несколько последовательных проливов, каждый раскрывает новые грани вкуса</p>
+        </div>
+        <div class="col-sm-6 col-lg-3 text-center">
+          <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:56px;height:56px;font-size:1.4rem;font-weight:700">4</div>
+          <h6 class="fw-bold">Дегустация</h6>
+          <p class="text-muted small">Обсуждаем ощущения, сравниваем разные сорта, задаём вопросы мастеру</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Контакты -->
+    <div class="text-center" id="contact">
+      <h4 class="fw-bold mb-3">Записаться или задать вопрос</h4>
+      <p class="text-muted mb-3">Свяжитесь с нами по телефону или email — выберем удобное время</p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="tel:+79001234567" class="btn btn-success btn-lg"><i class="bi bi-telephone me-2"></i>+7 900 123-45-67</a>
+        <a href="mailto:ceremony@leafcup.ru" class="btn btn-outline-success btn-lg"><i class="bi bi-envelope me-2"></i>ceremony@leafcup.ru</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="py-4 bg-dark text-white text-center mt-4">
+    <div class="container"><p class="mb-0">&copy; 2025 Leaf&Cup. Все права защищены.</p></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>restoreSession().then(() => updateCartBadge())</script>
+</body>
+</html>

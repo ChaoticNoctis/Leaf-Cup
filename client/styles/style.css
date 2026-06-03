@@ -1,0 +1,90 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: #333;
+  background-color: #FFF6E9;
+}
+
+@media (max-width: 768px) {
+  #heroCarousel img {
+    height: 40vh;       /* высота на телефоне */
+  }
+}
+
+.bg-white, .bg-light {
+  background-color: transparent !important;
+}
+
+/* Header */
+.navbar-brand span {
+  font-size: 1.4rem;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: #333 !important;
+}
+
+.nav-link:hover {
+  color: #198754 !important;
+}
+
+/* Carousel captions */
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px;
+}
+
+/* Tea section */
+.rounded-circle {
+  border: 2px solid #ddd;
+  transition: transform 0.3s;
+}
+
+.rounded-circle:hover {
+  transform: scale(1.05);
+  border-color: #198754;
+}
+
+/* карточки статей */
+.card-link {
+  display: block;              /* ссылка блочная, как карточка */
+  text-decoration: none !important; 
+}
+
+.card-link .card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;             
+  min-height: 300px;           
+  background-color: #596b3c !important;
+  color: white;               
+}
+
+.card-link:hover .card,
+.card-link:focus .card {
+  transform: translateY(-5px) scale(1.03); /* плавное увеличение и поднятие */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  text-decoration: none !important;       
+  color: white;                           
+}
+
+.card p {
+  margin: 0;
+}
+
+/* Footer */
+footer {
+  font-size: 0.9rem;
+}
+
+
+
+
+
+
+
+
+
+
+

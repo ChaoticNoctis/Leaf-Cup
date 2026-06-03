@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог — Leaf&Cup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="/"><img src="images/logo.png" alt="Leaf&Cup" height="70"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/">О нас</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/catalog">Каталог</a></li>
+          <li class="nav-item"><a class="nav-link" href="/ceremonies">Чайные церемонии</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sales">Акции</a></li>
+        </ul>
+        <form class="d-flex me-3" role="search" onsubmit="applySearch(event)">
+          <input class="form-control" id="searchInput" type="search" placeholder="Найди свой чай">
+        </form>
+        <a href="/cart" class="btn btn-outline-success me-2 position-relative">
+          <i class="bi bi-bag"></i>
+          <span class="cart-badge badge bg-danger" id="cartCount" style="display:none">0</span>
+        </a>
+        <div id="authBtn"><a href="/" class="btn btn-success" onclick="openAuth()">Войти</a></div>
+        <div id="userMenu" style="display:none">
+          <div class="dropdown">
+            <button class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle me-1"></i><span id="userNameHeader"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/account"><i class="bi bi-person me-2"></i>Личный кабинет</a></li>
+              <li id="adminMenuItem" style="display:none"><a class="dropdown-item" href="/admin"><i class="bi bi-gear me-2"></i>Панель администратора</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Выйти</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container py-5">
+    <h2 class="fw-bold mb-4">Каталог чая</h2>
+    <div class="row">
+      <!-- Фильтры -->
+      <div class="col-lg-3 mb-4">
+        <div class="filter-box p-3 rounded-3 bg-white shadow-sm">
+          <h6 class="fw-bold mb-3">Категория</h6>
+          <div id="categoryFilters"></div>
+          <hr>
+          <h6 class="fw-bold mb-3">Цена</h6>
+          <div class="d-flex gap-2 mb-2">
+            <input type="number" class="form-control form-control-sm" id="priceMin" placeholder="От" min="0">
+            <input type="number" class="form-control form-control-sm" id="priceMax" placeholder="До" min="0">
+          </div>
+          <button class="btn btn-success btn-sm w-100" onclick="applyFilters()">Применить</button>
+          <button class="btn btn-outline-secondary btn-sm w-100 mt-2" onclick="resetFilters()">Сбросить</button>
+        </div>
+      </div>
+
+      <!-- Товары -->
+      <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span id="resultsCount" class="text-muted small"></span>
+          <select class="form-select form-select-sm w-auto" id="sortSelect" onchange="applyFilters()">
+            <option value="default">По умолчанию</option>
+            <option value="price_asc">Цена: по возрастанию</option>
+            <option value="price_desc">Цена: по убыванию</option>
+            <option value="name_asc">По названию А–Я</option>
+          </select>
+        </div>
+        <div class="row g-3" id="productsGrid"></div>
+        <div id="emptyState" class="text-center py-5 d-none">
+          <i class="bi bi-search fs-1 text-muted"></i>
+          <p class="text-muted mt-2">Товары не найдены. Попробуйте изменить фильтры.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 bg-dark text-white text-center">
+    <div class="container"><p class="mb-0">&copy; 2025 Leaf&Cup. Все права защищены.</p></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let activeCategory = 'Все';
+    let activeSearch = '';
+    let allProducts = [];
+    let allCategories = [];
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('category')) activeCategory = params.get('category');
+    if (params.get('search'))   activeSearch   = params.get('search');
+
+    async function init() {
+      await restoreSession();
+      updateCartBadge();
+      // Загружаем категории и товары с сервера
+      try {
+        allCategories = await ProductAPI.categories();
+        allProducts   = await ProductAPI.list();
+      } catch(e) {
+        allProducts = []; allCategories = [];
+      }
+      buildCategoryFilters();
+      if (activeSearch) document.getElementById('searchInput').value = activeSearch;
+      applyFilters();
+    }
+
+    function buildCategoryFilters() {
+      const cats = ['Все', ...allCategories.map(c => c.name)];
+      const container = document.getElementById('categoryFilters');
+      container.innerHTML = cats.map(cat => `
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="radio" name="catFilter" id="cat_${cat}"
+            value="${cat}" ${cat === activeCategory ? 'checked' : ''} onchange="onCatChange('${cat}')">
+          <label class="form-check-label" for="cat_${cat}">${cat}</label>
+        </div>`).join('');
+    }
+
+    function onCatChange(cat) { activeCategory = cat; applyFilters(); }
+    function applySearch(e) { if(e) e.preventDefault(); activeSearch = document.getElementById('searchInput').value; applyFilters(); }
+
+    function applyFilters() {
+      const sort     = document.getElementById('sortSelect').value;
+      const priceMin = parseFloat(document.getElementById('priceMin').value) || 0;
+      const priceMax = parseFloat(document.getElementById('priceMax').value) || Infinity;
+      const search   = (document.getElementById('searchInput').value || activeSearch).toLowerCase();
+
+      let products = [...allProducts];
+      if (activeCategory !== 'Все') {
+        products = products.filter(p => p.category && p.category.name === activeCategory);
+      }
+      if (search) products = products.filter(p => p.name.toLowerCase().includes(search) || p.description.toLowerCase().includes(search));
+      products = products.filter(p => p.price >= priceMin && p.price <= priceMax);
+      if (sort === 'price_asc')  products.sort((a,b) => a.price - b.price);
+      if (sort === 'price_desc') products.sort((a,b) => b.price - a.price);
+      if (sort === 'name_asc')   products.sort((a,b) => a.name.localeCompare(b.name, 'ru'));
+      renderProducts(products);
+    }
+
+    function resetFilters() {
+      activeCategory = 'Все'; activeSearch = '';
+      document.getElementById('priceMin').value = '';
+      document.getElementById('priceMax').value = '';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('sortSelect').value = 'default';
+      buildCategoryFilters(); applyFilters();
+    }
+
+    function renderProducts(products) {
+      const grid  = document.getElementById('productsGrid');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('resultsCount');
+      count.textContent = 'Найдено: ' + products.length + ' товаров';
+      if (products.length === 0) { grid.innerHTML = ''; empty.classList.remove('d-none'); return; }
+      empty.classList.add('d-none');
+      grid.innerHTML = products.map(p => `
+        <div class="col-sm-6 col-xl-4">
+          <div class="product-card card h-100 border-0 shadow-sm">
+            <img src="${p.image_url}" class="card-img-top product-card-img" alt="${p.name}">
+            <div class="card-body d-flex flex-column">
+              <span class="badge bg-success-subtle text-success mb-1">${p.category ? p.category.name : ''}</span>
+              <h6 class="card-title fw-semibold">${p.name}</h6>
+              <p class="card-text text-muted small flex-grow-1">${p.description.substring(0,80)}…</p>
+              ${p.weight > 0 ? `<p class="text-muted small mb-1">${p.weight} г</p>` : ''}
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <span class="fw-bold text-success fs-6">${formatPrice(p.price)}</span>
+                <span class="text-muted small">На складе: ${p.stock}</span>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pb-3">
+              <button class="btn btn-success w-100 btn-sm" onclick="addToCart(${p.id}, '${p.name}', ${p.price}, '${p.image_url}')">
+                <i class="bi bi-bag-plus me-1"></i>В корзину
+              </button>
+            </div>
+          </div>
+        </div>`).join('');
+    }
+
+    init();
+  </script>
+</body>
+</html>

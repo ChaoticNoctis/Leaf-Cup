@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статьи о чае — Leaf&Cup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="/"><img src="images/logo.png" alt="Leaf&Cup" height="70"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="/">О нас</a></li>
+          <li class="nav-item"><a class="nav-link" href="/catalog">Каталог</a></li>
+          <li class="nav-item"><a class="nav-link" href="/ceremonies">Чайные церемонии</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sales">Акции</a></li>
+        </ul>
+        <a href="/cart" class="btn btn-outline-success me-2 position-relative">
+          <i class="bi bi-bag"></i>
+          <span class="cart-badge badge bg-danger" id="cartCount" style="display:none">0</span>
+        </a>
+        <div id="authBtn"><a href="/" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#authModal">Войти</a></div>
+        <div id="userMenu" style="display:none">
+          <div class="dropdown">
+            <button class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-person-circle me-1"></i><span id="userNameHeader"></span></button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/account">Личный кабинет</a></li>
+              <li id="adminMenuItem" style="display:none"><a class="dropdown-item" href="/admin">Панель администратора</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Выйти</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container py-5">
+    <h2 class="fw-bold mb-5 text-center">Статьи о чае</h2>
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-4">
+            <div class="text-success mb-2"><i class="bi bi-thermometer-half fs-4"></i></div>
+            <h5 class="fw-bold">Секрет терпкости: как температура влияет на вкус чая</h5>
+            <p class="text-muted small mt-2">Температура воды — один из ключевых параметров заваривания. Зелёный чай раскрывается при 70–80°C, чёрный требует 90–95°C, а пуэр — кипятка. Превышение температуры разрушает деликатные ароматические соединения и усиливает горечь.</p>
+            <p class="text-muted small">Правило простое: чем нежнее чай, тем прохладнее должна быть вода. Попробуйте заварить один и тот же улун при 80°C и 95°C — разница вас удивит.</p>
+          </div>
+          <div class="card-footer bg-success text-white border-0 px-4 py-2 small">Советы по завариванию</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-4">
+            <div class="text-success mb-2"><i class="bi bi-peace fs-4"></i></div>
+            <h5 class="fw-bold">Чай как медитация: как заваривание помогает замедлиться</h5>
+            <p class="text-muted small mt-2">Чайная церемония — это не просто способ приготовить напиток, это практика осознанного присутствия. Каждое движение, запах, звук льющейся воды становятся точкой фокуса. В японской традиции говорят «ичи-го ичи-э» — «одна встреча, одна возможность».</p>
+            <p class="text-muted small">Выделите 15 минут без телефона. Заварите чай медленно, наблюдайте за цветом настоя. Это простая, но эффективная форма медитации.</p>
+          </div>
+          <div class="card-footer bg-success text-white border-0 px-4 py-2 small">Философия чая</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-4">
+            <div class="text-success mb-2"><i class="bi bi-search fs-4"></i></div>
+            <h5 class="fw-bold">Как выбрать чай, который подходит именно тебе</h5>
+            <p class="text-muted small mt-2">Начни с вопроса: что ты хочешь от чая? Бодрость — выбирай чёрный или пуэр. Расслабление — белый или лёгкий улун. Пить без молока и сахара — зелёный или габа. Для экзотики — мате или чайные церемонии с мастером.</p>
+            <p class="text-muted small">Не бойтесь пробовать. Небольшая упаковка 50 г позволит познакомиться с сортом без больших вложений.</p>
+          </div>
+          <div class="card-footer bg-success text-white border-0 px-4 py-2 small">Гид для начинающих</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-4">
+            <div class="text-success mb-2"><i class="bi bi-lightning-charge fs-4"></i></div>
+            <h5 class="fw-bold">Кофеин в чае: мифы и правда о бодрящем эффекте</h5>
+            <p class="text-muted small mt-2">В чае содержится кофеин, но его действие мягче благодаря L-теанину — аминокислоте, которая замедляет всасывание кофеина и снижает тревожность. Именно поэтому чай бодрит без нервозности и «кофейных качелей».</p>
+            <p class="text-muted small">Больше всего кофеина в молодых листах: в белом чае из почек его может быть даже больше, чем в чёрном. Меньше всего — в травяных сборах.</p>
+          </div>
+          <div class="card-footer bg-success text-white border-0 px-4 py-2 small">Наука о чае</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-4">
+            <div class="text-success mb-2"><i class="bi bi-award fs-4"></i></div>
+            <h5 class="fw-bold">Десять знаменитых чаёв Китая: что нужно попробовать</h5>
+            <p class="text-muted small mt-2">Китай ежегодно составляет список десяти лучших чаёв. В него неизменно входят: Лун Цзин (Колодец дракона), Би Ло Чунь (Изумрудные спирали весны), Те Гуань Инь, Да Хун Пао и другие. Каждый из них обладает уникальным вкусовым профилем.</p>
+            <p class="text-muted small">Би Ло Чунь и Да Хун Пао есть в нашем каталоге — отличный старт для знакомства с классикой.</p>
+          </div>
+          <div class="card-footer bg-success text-white border-0 px-4 py-2 small">Китайский чай</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+          <div class="card-body p-4">
+            <div class="text-success mb-2"><i class="bi bi-clock-history fs-4"></i></div>
+            <h5 class="fw-bold">Пуэр: чай который живёт и меняется с годами</h5>
+            <p class="text-muted small mt-2">Пуэр — единственный чай, который улучшается с возрастом как вино. Шэн (сырой) пуэр со временем смягчается, теряет горечь и приобретает сложный букет. Прессованные блины хранят десятилетиями.</p>
+            <p class="text-muted small">Шу (приготовленный) пуэр — ускоренный вариант: мягкий и землистый уже с первого дня. Идеален для тех, кто хочет познакомиться с категорией без долгого ожидания.</p>
+          </div>
+          <div class="card-footer bg-success text-white border-0 px-4 py-2 small">Выдержанный чай</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="py-4 bg-dark text-white text-center mt-4">
+    <div class="container"><p class="mb-0">&copy; 2025 Leaf&Cup. Все права защищены.</p></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>restoreSession().then(() => updateCartBadge())</script>
+</body>
+</html>

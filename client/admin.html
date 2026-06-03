@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель администратора — Leaf&Cup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="/"><img src="images/logo.png" alt="Leaf&Cup" height="60"></a>
+      <span class="fw-bold text-success ms-2">Панель администратора</span>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <a href="/" class="btn btn-outline-secondary btn-sm"><i class="bi bi-house me-1"></i>На сайт</a>
+        <button class="btn btn-outline-danger btn-sm" onclick="logout()"><i class="bi bi-box-arrow-right me-1"></i>Выйти</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container-fluid px-4 py-4">
+    <!-- Статистика -->
+    <div class="row g-3 mb-4">
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card bg-white rounded-3 shadow-sm p-4 d-flex align-items-center gap-3">
+          <div class="stat-icon bg-success-subtle text-success rounded-3 p-3"><i class="bi bi-box-seam fs-4"></i></div>
+          <div><div class="text-muted small">Товаров</div><div class="fw-bold fs-4" id="statProducts"></div></div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card bg-white rounded-3 shadow-sm p-4 d-flex align-items-center gap-3">
+          <div class="stat-icon bg-primary-subtle text-primary rounded-3 p-3"><i class="bi bi-bag-check fs-4"></i></div>
+          <div><div class="text-muted small">Заказов</div><div class="fw-bold fs-4" id="statOrders"></div></div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card bg-white rounded-3 shadow-sm p-4 d-flex align-items-center gap-3">
+          <div class="stat-icon bg-warning-subtle text-warning rounded-3 p-3"><i class="bi bi-people fs-4"></i></div>
+          <div><div class="text-muted small">Пользователей</div><div class="fw-bold fs-4" id="statUsers"></div></div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card bg-white rounded-3 shadow-sm p-4 d-flex align-items-center gap-3">
+          <div class="stat-icon bg-danger-subtle text-danger rounded-3 p-3"><i class="bi bi-currency-exchange fs-4"></i></div>
+          <div><div class="text-muted small">Выручка</div><div class="fw-bold fs-4" id="statRevenue"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Вкладки -->
+    <ul class="nav nav-tabs mb-4" id="adminTabs">
+      <li class="nav-item"><button class="nav-link active" onclick="showAdminTab('products', this)"><i class="bi bi-box-seam me-1"></i>Товары</button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showAdminTab('orders', this)"><i class="bi bi-bag me-1"></i>Заказы</button></li>
+      <li class="nav-item"><button class="nav-link" onclick="showAdminTab('users', this)"><i class="bi bi-people me-1"></i>Пользователи</button></li>
+    </ul>
+
+    <!-- Товары -->
+    <div id="adminTab_products">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Управление каталогом</h5>
+        <button class="btn btn-success btn-sm" onclick="openProductModal()"><i class="bi bi-plus-lg me-1"></i>Добавить товар</button>
+      </div>
+      <div class="bg-white rounded-3 shadow-sm p-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr><th>Название</th><th>Категория</th><th>Цена</th><th>На складе</th><th>Действия</th></tr>
+            </thead>
+            <tbody id="productsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Заказы -->
+    <div id="adminTab_orders" style="display:none">
+      <h5 class="fw-bold mb-3">Управление заказами</h5>
+      <div class="bg-white rounded-3 shadow-sm p-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr><th>№</th><th>Пользователь</th><th>Дата</th><th>Сумма</th><th>Статус</th><th>Действие</th></tr>
+            </thead>
+            <tbody id="ordersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Пользователи -->
+    <div id="adminTab_users" style="display:none">
+      <h5 class="fw-bold mb-3">Пользователи</h5>
+      <div class="bg-white rounded-3 shadow-sm p-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr><th>Имя</th><th>Email</th><th>Роль</th><th>Дата регистрации</th></tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модал добавления/редактирования товара -->
+  <div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productModalTitle">Добавить товар</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editProductId">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Название</label>
+              <input type="text" class="form-control" id="editProductName">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Категория</label>
+              <select class="form-select" id="editProductCategory">
+                <option>Чёрный</option><option>Зелёный</option><option>Белый</option>
+                <option>Улун</option><option>Пуэр</option><option>Мате</option>
+                <option>Габа</option><option>Подарочные наборы</option><option>Чайные церемонии</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Цена (₽)</label>
+              <input type="number" class="form-control" id="editProductPrice" min="0">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Вес (г)</label>
+              <input type="number" class="form-control" id="editProductWeight" min="0">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">На складе</label>
+              <input type="number" class="form-control" id="editProductStock" min="0">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Описание</label>
+              <textarea class="form-control" id="editProductDesc" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-success" onclick="saveProduct()">Сохранить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if (!requireAdmin()) { /* redirect handled */ }
+
+    const STATUS_LIST = ['Новый', 'В обработке', 'Доставляется', 'Выполнен', 'Отменён'];
+    const STATUS_COLORS = { 'В обработке': 'warning', 'Доставляется': 'info', 'Выполнен': 'success', 'Отменён': 'danger', 'Новый': 'secondary' };
+
+    function showAdminTab(tab, btn) {
+      ['products','orders','users'].forEach(t => document.getElementById('adminTab_' + t).style.display = t === tab ? '' : 'none');
+      document.querySelectorAll('#adminTabs .nav-link').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      if (tab === 'products') renderProductsTable();
+      if (tab === 'orders')   renderOrdersTable();
+      if (tab === 'users')    renderUsersTable();
+    }
+
+    async function renderStats() {
+      try {
+        const [products, orders, users] = await Promise.all([
+          ProductAPI.list(), OrderAPI.getAll(), UserAPI.getAll()
+        ]);
+        document.getElementById('statProducts').textContent = products.length;
+        document.getElementById('statOrders').textContent   = orders.length;
+        document.getElementById('statUsers').textContent    = users.length;
+        document.getElementById('statRevenue').textContent  = formatPrice(orders.reduce((s,o) => s + o.total, 0));
+      } catch {}
+    }
+
+    async function renderProductsTable() {
+      let products = [];
+      try { products = await ProductAPI.list(); } catch {}
+      document.getElementById('productsTable').innerHTML = products.map(p => `
+        <tr>
+          <td><span class="fw-semibold">${p.name}</span></td>
+          <td><span class="badge bg-success-subtle text-success">${p.category ? p.category.name : ''}</span></td>
+          <td class="fw-semibold text-success">${formatPrice(p.price)}</td>
+          <td>${p.stock > 0 ? p.stock + ' шт.' : '<span class="text-danger">Нет</span>'}</td>
+          <td>
+            <button class="btn btn-outline-primary btn-sm me-1" onclick="openProductModal(${p.id})"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-outline-danger btn-sm" onclick="confirmDelete(${p.id})"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function renderOrdersTable() {
+      let orders = [];
+      try { orders = await OrderAPI.getAll(); } catch {}
+      document.getElementById('ordersTable').innerHTML = orders.map(o => {
+        const user = o.user || {};
+        return `
+          <tr>
+            <td class="fw-semibold">№${o.id}</td>
+            <td>${user.full_name || 'Неизвестно'}<br><small class="text-muted">${user.email || ''}</small></td>
+            <td>${o.created_at ? o.created_at.slice(0,10) : ''}</td>
+            <td class="fw-bold text-success">${formatPrice(o.total)}</td>
+            <td><span class="badge bg-${STATUS_COLORS[o.status] || 'secondary'}">${o.status}</span></td>
+            <td>
+              <select class="form-select form-select-sm" onchange="changeOrderStatus(${o.id}, this.value)" style="min-width:140px">
+                ${STATUS_LIST.map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${s}</option>`).join('')}
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function renderUsersTable() {
+      let users = [];
+      try { users = await UserAPI.getAll(); } catch {}
+      document.getElementById('usersTable').innerHTML = users.map(u => `
+        <tr>
+          <td class="fw-semibold">${u.full_name}</td>
+          <td>${u.email}</td>
+          <td><span class="badge ${u.role === 'admin' ? 'bg-danger' : 'bg-success'}">${u.role === 'admin' ? 'Администратор' : 'Покупатель'}</span></td>
+          <td class="text-muted">${u.created_at ? u.created_at.slice(0,10) : ''}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function changeOrderStatus(id, status) {
+      try { await OrderAPI.updateStatus(id, status); } catch {}
+      renderOrdersTable();
+      renderStats();
+    }
+
+    function openProductModal(id) {
+      const modal = new bootstrap.Modal(document.getElementById('productModal'));
+      if (id) {
+        const p = PRODUCTS.find(x => x.id === id);
+        document.getElementById('productModalTitle').textContent = 'Редактировать товар';
+        document.getElementById('editProductId').value       = p.id;
+        document.getElementById('editProductName').value     = p.name;
+        document.getElementById('editProductCategory').value = p.category;
+        document.getElementById('editProductPrice').value    = p.price;
+        document.getElementById('editProductWeight').value   = p.weight;
+        document.getElementById('editProductStock').value    = p.stock;
+        document.getElementById('editProductDesc').value     = p.description;
+      } else {
+        document.getElementById('productModalTitle').textContent = 'Добавить товар';
+        document.getElementById('editProductId').value = '';
+        ['Name','Category','Price','Weight','Stock','Desc'].forEach(f => {
+          const el = document.getElementById('editProduct' + f);
+          if (el) el.value = '';
+        });
+      }
+      modal.show();
+    }
+
+    async function saveProduct() {
+      const id    = document.getElementById('editProductId').value;
+      const data  = {
+        name:        document.getElementById('editProductName').value.trim(),
+        category:    document.getElementById('editProductCategory').value,
+        price:       parseInt(document.getElementById('editProductPrice').value) || 0,
+        weight:      parseInt(document.getElementById('editProductWeight').value) || 0,
+        stock:       parseInt(document.getElementById('editProductStock').value) || 0,
+        description: document.getElementById('editProductDesc').value.trim(),
+        image:       'images/green-tea.jpg',
+      };
+      if (!data.name) { alert('Введите название товара'); return; }
+      try {
+        if (id) { await ProductAPI.update(parseInt(id), data); }
+        else     { await ProductAPI.create(data); }
+      } catch(e) { alert(e.message); return; }
+      bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+      renderProductsTable();
+      renderStats();
+    }
+
+    async function confirmDelete(id) {
+      if (confirm('Удалить этот товар?')) {
+        try { await ProductAPI.delete(id); } catch {}
+        renderProductsTable();
+        renderStats();
+      }
+    }
+
+    restoreSession().then(() => {
+      if (!currentUser || currentUser.role !== 'admin') { window.location.href = '/'; return; }
+      renderStats();
+      renderProductsTable();
+    });
+  </script>
+</body>
+</html>

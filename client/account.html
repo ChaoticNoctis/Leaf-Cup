@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет — Leaf&Cup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="/"><img src="images/logo.png" alt="Leaf&Cup" height="70"></a>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <a href="/catalog" class="btn btn-outline-success btn-sm">Каталог</a>
+        <a href="/cart" class="btn btn-outline-success position-relative">
+          <i class="bi bi-bag"></i>
+          <span class="cart-badge badge bg-danger" id="cartCount" style="display:none">0</span>
+        </a>
+        <div id="userMenu" style="display:none">
+          <div class="dropdown">
+            <button class="btn btn-outline-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle me-1"></i><span id="userNameHeader"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/account">Личный кабинет</a></li>
+              <li id="adminMenuItem" style="display:none"><a class="dropdown-item" href="/admin">Панель администратора</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Выйти</a></li>
+            </ul>
+          </div>
+        </div>
+        <div id="authBtn" style="display:none"><a href="/" class="btn btn-success btn-sm">Войти</a></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container py-5">
+    <div class="row g-4">
+      <!-- Боковая панель -->
+      <div class="col-lg-3">
+        <div class="bg-white rounded-3 shadow-sm p-4 text-center mb-3">
+          <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:72px;height:72px;font-size:2rem">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <h6 class="fw-bold mb-0" id="profileName"></h6>
+          <small class="text-muted" id="profileEmail"></small>
+          <div class="mt-2"><span class="badge bg-success-subtle text-success" id="profileRole"></span></div>
+        </div>
+        <div class="bg-white rounded-3 shadow-sm p-2">
+          <div class="list-group list-group-flush">
+            <a href="#orders" class="list-group-item list-group-item-action active" onclick="showTab('orders', this)"><i class="bi bi-bag me-2"></i>Мои заказы</a>
+            <a href="#profile" class="list-group-item list-group-item-action" onclick="showTab('profile', this)"><i class="bi bi-person me-2"></i>Профиль</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Основная область -->
+      <div class="col-lg-9">
+        <!-- Заказы -->
+        <div id="tab_orders">
+          <h4 class="fw-bold mb-4">Мои заказы</h4>
+          <div id="ordersList"></div>
+        </div>
+
+        <!-- Профиль -->
+        <div id="tab_profile" style="display:none">
+          <h4 class="fw-bold mb-4">Профиль</h4>
+          <div class="bg-white rounded-3 shadow-sm p-4">
+            <div class="mb-3">
+              <label class="form-label">Имя</label>
+              <input type="text" class="form-control" id="editName">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" id="editEmail" disabled>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Дата регистрации</label>
+              <input type="text" class="form-control" id="editDate" disabled>
+            </div>
+            <div id="profileMsg" class="alert d-none"></div>
+            <button class="btn btn-success" onclick="saveProfile()">Сохранить изменения</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="py-4 bg-dark text-white text-center">
+    <div class="container"><p class="mb-0">&copy; 2025 Leaf&Cup. Все права защищены.</p></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Страница инициализируется после проверки авторизации
+
+    const STATUS_COLORS = { 'В обработке': 'warning', 'Доставляется': 'info', 'Выполнен': 'success', 'Отменён': 'danger', 'Новый': 'secondary' };
+
+    function showTab(tab, el) {
+      document.getElementById('tab_orders').style.display  = tab === 'orders'  ? '' : 'none';
+      document.getElementById('tab_profile').style.display = tab === 'profile' ? '' : 'none';
+      document.querySelectorAll('.list-group-item').forEach(a => a.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    async function renderOrders() {
+      let orders = [];
+      try { orders = await OrderAPI.getMy(); } catch {}
+      const list = document.getElementById('ordersList');
+      if (orders.length === 0) {
+        list.innerHTML = `<div class="text-center py-5"><i class="bi bi-bag fs-1 text-muted"></i><p class="text-muted mt-2">У вас ещё нет заказов</p><a href="/catalog" class="btn btn-success">Перейти в каталог</a></div>`;
+        return;
+      }
+      list.innerHTML = (orders || []).map(o => `
+        <div class="bg-white rounded-3 shadow-sm p-4 mb-3">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+            <div>
+              <span class="fw-bold">Заказ №${o.id}</span>
+              <span class="text-muted ms-2 small">от ${o.createdAt}</span>
+            </div>
+            <span class="badge bg-${STATUS_COLORS[o.status] || 'secondary'}">${o.status}</span>
+          </div>
+          <hr class="my-2">
+          <div class="small text-muted mb-2">
+            ${o.items.map(i => `${i.name} × ${i.qty}`).join(', ')}
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted small"><i class="bi bi-geo-alt me-1"></i>${o.address}</span>
+            <span class="fw-bold text-success">${formatPrice(o.total)}</span>
+          </div>
+          <div class="text-muted small"><i class="bi bi-credit-card me-1"></i>${o.payment}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderProfile() {
+      document.getElementById('editName').value  = currentUser.full_name || '';
+      document.getElementById('editEmail').value = currentUser.email || '';
+      document.getElementById('editDate').value  = currentUser.created_at ? currentUser.created_at.slice(0,10) : '';
+    }
+
+    async function saveProfile() {
+      const newName = document.getElementById('editName').value.trim();
+      const msgEl = document.getElementById('profileMsg');
+      if (!newName) { msgEl.textContent = 'Введите имя'; msgEl.className = 'alert alert-danger'; msgEl.classList.remove('d-none'); return; }
+      try {
+        await UserAPI.updateMe(newName);
+        currentUser.full_name = newName;
+        initHeader();
+        msgEl.textContent = 'Профиль обновлён';
+        msgEl.className = 'alert alert-success';
+        msgEl.classList.remove('d-none');
+        setTimeout(() => msgEl.classList.add('d-none'), 2000);
+      } catch(e) {
+        msgEl.textContent = e.message; msgEl.className = 'alert alert-danger'; msgEl.classList.remove('d-none');
+      }
+    }
+
+    function initProfile() {
+      document.getElementById('profileName').textContent  = currentUser.full_name || currentUser.name || '';
+      document.getElementById('profileEmail').textContent = currentUser.email;
+      document.getElementById('profileRole').textContent  = currentUser.role === 'admin' ? 'Администратор' : 'Покупатель';
+    }
+
+    restoreSession().then(() => {
+      if (!currentUser) { window.location.href = '/'; return; }
+      updateCartBadge();
+      initProfile();
+      renderOrders();
+      renderProfile();
+    });
+  </script>
+</body>
+</html>

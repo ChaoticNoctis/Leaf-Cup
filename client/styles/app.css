@@ -1,0 +1,80 @@
+/* ========== APP.CSS — дополнительные стили ========== */
+
+/* Категории на главной */
+.category-item {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.category-item:hover { transform: translateY(-4px); }
+.category-item:hover p { color: #198754; font-weight: 600; }
+
+/* Карточка артикула */
+.article-card {
+  min-height: 200px;
+  background-color: #596b3c !important;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.article-card:hover { transform: translateY(-5px) scale(1.03); box-shadow: 0 10px 20px rgba(0,0,0,.25); }
+.article-card p { margin: 0; }
+
+/* Герой */
+.hero-img { max-height: 520px; object-fit: cover; }
+
+/* Корзина - бейдж */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* Каталог - карточка товара */
+.product-card { transition: box-shadow 0.2s, transform 0.2s; border-radius: 12px !important; overflow: hidden; }
+.product-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.12) !important; transform: translateY(-3px); }
+.product-card-img { height: 180px; object-fit: cover; }
+
+/* Фильтр-панель */
+.filter-box { position: sticky; top: 90px; }
+
+/* Фоновый цвет секций */
+.bg-light-custom { background-color: rgba(89, 107, 60, 0.07); }
+
+/* Статистика в админке */
+.stat-card { transition: box-shadow 0.2s; }
+.stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1) !important; }
+.stat-icon { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; }
+
+/* Анимация тоста */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Таблицы в админке */
+.table th { font-weight: 600; font-size: 13px; }
+.table td { font-size: 14px; }
+
+/* Bootstrap overrides */
+.btn-success { background-color: #596b3c; border-color: #596b3c; }
+.btn-success:hover { background-color: #4a5a31; border-color: #4a5a31; }
+.btn-outline-success { color: #596b3c; border-color: #596b3c; }
+.btn-outline-success:hover { background-color: #596b3c; border-color: #596b3c; }
+.text-success { color: #596b3c !important; }
+.bg-success { background-color: #596b3c !important; }
+.bg-success-subtle { background-color: #eef2e8 !important; }
+.badge.bg-success { background-color: #596b3c !important; }
+.nav-link.active { color: #596b3c !important; border-bottom-color: #596b3c !important; }
+.list-group-item-action.active { background-color: #596b3c; border-color: #596b3c; }
+
+/* ── Navbar: убираем наложение при скролле ── */
+.navbar.sticky-top {
+  z-index: 1030;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08) !important;
+}
+
+/* Добавляем отступ под sticky navbar чтобы контент не прятался */
+body { padding-top: 0; }
