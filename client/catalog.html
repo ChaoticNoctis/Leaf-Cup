@@ -15,6 +15,10 @@
   <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
     <div class="container">
       <a class="navbar-brand" href="/"><img src="images/logo.png" alt="Leaf&Cup" height="70"></a>
+      <!-- Поиск для мобильных: всегда виден, вне сворачиваемого меню -->
+      <form class="d-flex d-lg-none flex-grow-1 mx-2" role="search" onsubmit="applySearch(event)">
+        <input class="form-control form-control-sm" id="searchInputMobile" type="search" placeholder="Найди свой чай">
+      </form>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
@@ -23,7 +27,7 @@
           <li class="nav-item"><a class="nav-link" href="/ceremonies">Чайные церемонии</a></li>
           <li class="nav-item"><a class="nav-link" href="/sales">Акции</a></li>
         </ul>
-        <form class="d-flex me-3" role="search" onsubmit="applySearch(event)">
+        <form class="d-none d-lg-flex me-3" role="search" onsubmit="applySearch(event)">
           <input class="form-control" id="searchInput" type="search" placeholder="Найди свой чай">
         </form>
         <a href="/cart" class="btn btn-outline-success me-2 position-relative">
@@ -150,7 +154,10 @@
         allProducts = []; allCategories = [];
       }
       buildCategoryFilters();
-      if (activeSearch) document.getElementById('searchInput').value = activeSearch;
+      if (activeSearch) {
+        if (document.getElementById('searchInput'))       document.getElementById('searchInput').value = activeSearch;
+        if (document.getElementById('searchInputMobile')) document.getElementById('searchInputMobile').value = activeSearch;
+      }
       applyFilters();
     }
 
@@ -166,13 +173,28 @@
     }
 
     function onCatChange(cat) { activeCategory = cat; applyFilters(); }
-    function applySearch(e) { if(e) e.preventDefault(); activeSearch = document.getElementById('searchInput').value; applyFilters(); }
+    function getSearchValue() {
+      const d = document.getElementById('searchInput');
+      const m = document.getElementById('searchInputMobile');
+      // берём то поле, которое сейчас заполнено/видимо
+      if (m && m.value) return m.value;
+      if (d && d.value) return d.value;
+      return '';
+    }
+    function applySearch(e) {
+      if(e) e.preventDefault();
+      activeSearch = getSearchValue();
+      // синхронизируем оба поля
+      if (document.getElementById('searchInput'))       document.getElementById('searchInput').value = activeSearch;
+      if (document.getElementById('searchInputMobile')) document.getElementById('searchInputMobile').value = activeSearch;
+      applyFilters();
+    }
 
     function applyFilters() {
       const sort     = document.getElementById('sortSelect').value;
       const priceMin = parseFloat(document.getElementById('priceMin').value) || 0;
       const priceMax = parseFloat(document.getElementById('priceMax').value) || Infinity;
-      const search   = (document.getElementById('searchInput').value || activeSearch).toLowerCase();
+      const search   = (getSearchValue() || activeSearch).toLowerCase();
 
       let products = [...allProducts];
       if (activeCategory !== 'Все') {
@@ -191,6 +213,7 @@
       document.getElementById('priceMin').value = '';
       document.getElementById('priceMax').value = '';
       document.getElementById('searchInput').value = '';
+      if (document.getElementById('searchInputMobile')) document.getElementById('searchInputMobile').value = '';
       document.getElementById('sortSelect').value = 'default';
       buildCategoryFilters(); applyFilters();
     }

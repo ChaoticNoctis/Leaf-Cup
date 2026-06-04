@@ -18,6 +18,9 @@
       <a class="navbar-brand d-flex align-items-center" href="/">
         <img src="images/logo.png" alt="Leaf&Cup" height="70" class="me-2">
       </a>
+      <form class="d-flex d-lg-none flex-grow-1 mx-2" role="search" onsubmit="searchRedirect(event)">
+        <input class="form-control form-control-sm" id="searchInputMobile" type="search" placeholder="Найди свой чай">
+      </form>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -28,7 +31,7 @@
           <li class="nav-item"><a class="nav-link" href="/ceremonies">Чайные церемонии</a></li>
           <li class="nav-item"><a class="nav-link" href="/sales">Акции</a></li>
         </ul>
-        <form class="d-flex me-3" role="search" onsubmit="searchRedirect(event)">
+        <form class="d-none d-lg-flex me-3" role="search" onsubmit="searchRedirect(event)">
           <input class="form-control" id="searchInput" type="search" placeholder="Найди свой чай">
         </form>
         <a href="/cart" class="btn btn-outline-success me-2 position-relative">
@@ -208,7 +211,9 @@
     }
     function searchRedirect(e) {
       e.preventDefault();
-      const q = document.getElementById('searchInput').value;
+      const m = document.getElementById('searchInputMobile');
+      const d = document.getElementById('searchInput');
+      const q = (m && m.value) ? m.value : (d ? d.value : '');
       window.location.href = 'catalog.html?search=' + encodeURIComponent(q);
     }
     restoreSession().then(() => updateCartBadge());
