@@ -2,6 +2,15 @@ body {
   font-family: 'Montserrat', sans-serif;
   color: #333;
   background-color: #FFF6E9;
+  /* Прижимаем футер к низу страницы на коротких страницах */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Футер всегда внизу: забирает весь свободный отступ сверху */
+body > footer {
+  margin-top: auto;
 }
 
 @media (max-width: 768px) {
@@ -10,24 +19,19 @@ body {
   }
 }
 
-.bg-white, .bg-light {
+.bg-light {
+  background-color: transparent !important;
+}
+/* bg-white остаётся прозрачным как раньше, но НЕ у шапки */
+.bg-white:not(.navbar) {
   background-color: transparent !important;
 }
 
-/* ===== Фиксированное меню ===== */
-.navbar {
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1030;
+/* ===== Фиксированное меню (sticky, не перекрывает контент) ===== */
+.navbar.sticky-top {
   background-color: #FFF6E9 !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-/* Отступ сверху чтобы контент не прятался под navbar */
-body {
-  padding-top: 90px;
+  z-index: 1030;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Header */

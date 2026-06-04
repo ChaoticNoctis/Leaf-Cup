@@ -87,6 +87,37 @@
     </div>
   </div>
 
+  <!-- Модальное окно с описанием товара -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-semibold" id="pmTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-4">
+            <div class="col-md-5">
+              <img id="pmImage" src="" alt="" class="img-fluid rounded-3 w-100" style="object-fit:cover;max-height:300px">
+            </div>
+            <div class="col-md-7 d-flex flex-column">
+              <span class="badge bg-success-subtle text-success mb-2 align-self-start" id="pmCategory"></span>
+              <p class="text-muted" id="pmDescription" style="white-space:pre-line"></p>
+              <p class="mb-1 small text-muted" id="pmWeight"></p>
+              <p class="mb-1 small text-muted" id="pmStock"></p>
+              <div class="mt-auto pt-3">
+                <div class="fw-bold text-success fs-4 mb-3" id="pmPrice"></div>
+                <button class="btn btn-success w-100" id="pmAddBtn">
+                  <i class="bi bi-bag-plus me-1"></i>В корзину
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="py-4 bg-dark text-white text-center">
     <div class="container"><p class="mb-0">&copy; 2025 Leaf&Cup. Все права защищены.</p></div>
@@ -173,7 +204,7 @@
       empty.classList.add('d-none');
       grid.innerHTML = products.map(p => `
         <div class="col-sm-6 col-xl-4">
-          <div class="product-card card h-100 border-0 shadow-sm">
+          <div class="product-card card h-100 border-0 shadow-sm" style="cursor:pointer" onclick="showProductDetail(${p.id})">
             <img src="${p.image_url}" class="card-img-top product-card-img" alt="${p.name}">
             <div class="card-body d-flex flex-column">
               <span class="badge bg-success-subtle text-success mb-1">${p.category ? p.category.name : ''}</span>
@@ -186,12 +217,33 @@
               </div>
             </div>
             <div class="card-footer bg-transparent border-0 pb-3">
-              <button class="btn btn-success w-100 btn-sm" onclick="addToCart(${p.id}, '${p.name}', ${p.price}, '${p.image_url}')">
+              <button class="btn btn-success w-100 btn-sm" onclick="event.stopPropagation(); addToCart(${p.id}, '${p.name}', ${p.price}, '${p.image_url}')">
                 <i class="bi bi-bag-plus me-1"></i>В корзину
               </button>
             </div>
           </div>
         </div>`).join('');
+    }
+
+    // Открыть мини-окно с полным описанием товара
+    let productModalInstance = null;
+    function showProductDetail(id) {
+      const p = allProducts.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('pmTitle').textContent = p.name;
+      document.getElementById('pmImage').src = p.image_url;
+      document.getElementById('pmImage').alt = p.name;
+      document.getElementById('pmCategory').textContent = p.category ? p.category.name : '';
+      document.getElementById('pmDescription').textContent = p.description || 'Описание отсутствует.';
+      document.getElementById('pmWeight').textContent = p.weight > 0 ? ('Вес: ' + p.weight + ' г') : '';
+      document.getElementById('pmStock').textContent = 'На складе: ' + p.stock + ' шт.';
+      document.getElementById('pmPrice').textContent = formatPrice(p.price);
+      const addBtn = document.getElementById('pmAddBtn');
+      addBtn.onclick = () => { addToCart(p.id, p.name, p.price, p.image_url); };
+      if (!productModalInstance) {
+        productModalInstance = new bootstrap.Modal(document.getElementById('productModal'));
+      }
+      productModalInstance.show();
     }
 
     init();
