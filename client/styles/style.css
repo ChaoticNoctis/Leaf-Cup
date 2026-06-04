@@ -14,6 +14,22 @@ body {
   background-color: transparent !important;
 }
 
+/* ===== Фиксированное меню ===== */
+.navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+  background-color: #FFF6E9 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Отступ сверху чтобы контент не прятался под navbar */
+body {
+  padding-top: 90px;
+}
+
 /* Header */
 .navbar-brand span {
   font-size: 1.4rem;
