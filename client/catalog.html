@@ -108,7 +108,6 @@
               <span class="badge bg-success-subtle text-success mb-2 align-self-start" id="pmCategory"></span>
               <p class="text-muted" id="pmDescription" style="white-space:pre-line"></p>
               <p class="mb-1 small text-muted" id="pmWeight"></p>
-              <p class="mb-1 small text-muted" id="pmStock"></p>
               <div class="mt-auto pt-3">
                 <div class="fw-bold text-success fs-4 mb-3" id="pmPrice"></div>
                 <button class="btn btn-success w-100" id="pmAddBtn">
@@ -236,7 +235,6 @@
               ${p.weight > 0 ? `<p class="text-muted small mb-1">${p.weight} г</p>` : ''}
               <div class="d-flex justify-content-between align-items-center mt-2">
                 <span class="fw-bold text-success fs-6">${formatPrice(p.price)}</span>
-                <span class="text-muted small">На складе: ${p.stock}</span>
               </div>
             </div>
             <div class="card-footer bg-transparent border-0 pb-3">
@@ -259,7 +257,6 @@
       document.getElementById('pmCategory').textContent = p.category ? p.category.name : '';
       document.getElementById('pmDescription').textContent = p.description || 'Описание отсутствует.';
       document.getElementById('pmWeight').textContent = p.weight > 0 ? ('Вес: ' + p.weight + ' г') : '';
-      document.getElementById('pmStock').textContent = 'На складе: ' + p.stock + ' шт.';
       document.getElementById('pmPrice').textContent = formatPrice(p.price);
       const addBtn = document.getElementById('pmAddBtn');
       addBtn.onclick = () => { addToCart(p.id, p.name, p.price, p.image_url); };

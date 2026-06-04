@@ -15,7 +15,28 @@ body > footer {
 
 @media (max-width: 768px) {
   #heroCarousel img {
-    height: 40vh;       /* высота на телефоне */
+    height: 56vh;            /* выше, чтобы подпись помещалась */
+    min-height: 360px;
+  }
+  /* Подпись центрируем и масштабируем под маленький экран */
+  .carousel-caption {
+    left: 50% !important;
+    right: auto !important;
+    bottom: 50% !important;
+    transform: translate(-50%, 50%);
+    width: 90%;
+    max-width: 90% !important;
+    padding: 14px !important;
+    text-align: center !important;
+  }
+  .carousel-caption h2 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin-bottom: .4rem;
+  }
+  .carousel-caption p {
+    font-size: .95rem;
+    margin-bottom: .5rem;
   }
 }
 
@@ -54,6 +75,8 @@ body > footer {
   border-radius: 10px;
   padding: 20px;
   max-width: 400px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* Tea section */
