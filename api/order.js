@@ -13,7 +13,6 @@ function getPayloads(token) {
 
 class OrderController {
 
-    // Создание нового заказа
     async CreateOrder(req, resp) {
         try {
             const payloads = getPayloads(req.cookies.token)
@@ -27,10 +26,8 @@ class OrderController {
                 return resp.status(400).send("Заполните все поля заказа!")
             }
 
-            // Считаем итоговую сумму
             const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-            // Создаём заказ
             const order = await Order.create({
                 user_id: payloads.id,
                 address,
@@ -39,7 +36,6 @@ class OrderController {
                 total
             })
 
-            // Сохраняем позиции заказа и уменьшаем остатки на складе
             for (const item of items) {
                 await OrderItem.create({
                     order_id: order.id,
@@ -62,7 +58,6 @@ class OrderController {
         }
     }
 
-    // Получение заказов текущего пользователя
     async GetMyOrders(req, resp) {
         try {
             const payloads = getPayloads(req.cookies.token)
@@ -83,7 +78,6 @@ class OrderController {
         }
     }
 
-    // Получение всех заказов (только администратор)
     async GetAllOrders(req, resp) {
         try {
             const payloads = getPayloads(req.cookies.token)
@@ -103,7 +97,6 @@ class OrderController {
         }
     }
 
-    // Обновление статуса заказа (только администратор)
     async UpdateOrderStatus(req, resp) {
         try {
             const payloads = getPayloads(req.cookies.token)

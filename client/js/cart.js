@@ -1,5 +1,3 @@
-// ========== КОРЗИНА — сохраняется в sessionStorage между страницами ==========
-
 function loadCart() {
     try {
         const saved = sessionStorage.getItem('leafcup_cart')

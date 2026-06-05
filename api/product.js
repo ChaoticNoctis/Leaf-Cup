@@ -13,7 +13,6 @@ function getPayloads(token) {
 
 class ProductController {
 
-    // Получение всех товаров с возможностью фильтрации
     async GetProducts(req, resp) {
         try {
             const { category_id, search } = req.query
@@ -29,7 +28,6 @@ class ProductController {
                 order: [["id", "ASC"]]
             })
 
-            // Фильтрация по поисковому запросу
             if (search) {
                 const q = search.toLowerCase()
                 products = products.filter(p =>
@@ -45,7 +43,6 @@ class ProductController {
         }
     }
 
-    // Получение одного товара по ID
     async GetProductById(req, resp) {
         try {
             const product = await Product.findByPk(req.params.id, {
@@ -61,7 +58,6 @@ class ProductController {
         }
     }
 
-    // Получение всех категорий
     async GetCategories(req, resp) {
         try {
             const categories = await Category.findAll({ order: [["id", "ASC"]] })
@@ -72,7 +68,6 @@ class ProductController {
         }
     }
 
-    // Добавление нового товара (только администратор)
     async CreateProduct(req, resp) {
         try {
             const payloads = getPayloads(req.cookies.token)

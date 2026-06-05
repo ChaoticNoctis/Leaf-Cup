@@ -1,6 +1,4 @@
-// ========== API-КЛИЕНТ ==========
-// Все запросы идут на сервер, токен хранится в httpOnly cookie (как в курсовой)
-const API_BASE = ''  // сервер отдаёт и фронтенд и API
+const API_BASE = ''
 
 async function apiFetch(path, options = {}) {
     const res = await fetch('/api' + path, {

@@ -266,19 +266,24 @@
       renderStats();
     }
 
-    function openProductModal(id) {
+    async function openProductModal(id) {
       const modal = new bootstrap.Modal(document.getElementById('productModal'));
       if (id) {
-        const p = PRODUCTS.find(x => x.id === id);
-        document.getElementById('productModalTitle').textContent = 'Редактировать товар';
-        document.getElementById('editProductId').value       = p.id;
-        document.getElementById('editProductName').value     = p.name;
-        document.getElementById('editProductCategory').value = p.category_id;
-        document.getElementById('editProductPrice').value    = p.price;
-        document.getElementById('editProductWeight').value   = p.weight;
-        document.getElementById('editProductStock').value    = p.stock;
-        document.getElementById('editProductDesc').value     = p.description;
-        document.getElementById('editProductImage').value    = p.image_url || 'images/green-tea.jpg';
+        try {
+          const p = await ProductAPI.get(id);
+          document.getElementById('productModalTitle').textContent = 'Редактировать товар';
+          document.getElementById('editProductId').value       = p.id;
+          document.getElementById('editProductName').value     = p.name;
+          document.getElementById('editProductCategory').value = p.category_id;
+          document.getElementById('editProductPrice').value    = p.price;
+          document.getElementById('editProductWeight').value   = p.weight;
+          document.getElementById('editProductStock').value    = p.stock;
+          document.getElementById('editProductDesc').value     = p.description;
+          document.getElementById('editProductImage').value    = p.image_url || 'images/green-tea.jpg';
+        } catch(e) {
+          alert('Не удалось загрузить товар');
+          return;
+        }
       } else {
         document.getElementById('productModalTitle').textContent = 'Добавить товар';
         document.getElementById('editProductId').value = '';

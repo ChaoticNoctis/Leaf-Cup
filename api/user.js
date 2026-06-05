@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken")
 
 const JWT_SECRET = "LEAFCUP_SECRET_KEY"
 
-// Вспомогательная функция: читает payload из cookie-токена
 function getPayloads(token) {
     try {
         return jwt.verify(token, JWT_SECRET)
@@ -27,13 +26,11 @@ class UserController {
                 return resp.status(400).send("Пароль должен быть не менее 6 символов!")
             }
 
-            // Проверяем, не занят ли email
             const existing = await User.findOne({ where: { email } })
             if (existing) {
                 return resp.status(409).send("Пользователь с таким email уже существует!")
             }
 
-            // Хешируем пароль перед сохранением
             bcrypt.hash(password, 10).then(async (hashedPassword) => {
                 const user = await User.create({
                     email,
@@ -41,7 +38,6 @@ class UserController {
                     password: hashedPassword
                 })
 
-                // Создаём JWT-токен и сохраняем в cookie
                 const token = jwt.sign(
                     { id: user.id, full_name: user.full_name, role: user.role },
                     JWT_SECRET
@@ -65,7 +61,6 @@ class UserController {
         }
     }
 
-    // Авторизация пользователя
     async LoginUser(req, resp) {
         try {
             const { email, password } = req.body
@@ -74,19 +69,16 @@ class UserController {
                 return resp.status(400).send("Заполните все поля!")
             }
 
-            // Ищем пользователя по email
             const user = await User.findOne({ where: { email } })
             if (!user) {
                 return resp.status(401).send("Неверный email или пароль!")
             }
 
-            // Проверяем пароль
             const isValid = await bcrypt.compare(password, user.password)
             if (!isValid) {
                 return resp.status(401).send("Неверный email или пароль!")
             }
 
-            // Создаём JWT-токен и сохраняем в cookie
             const token = jwt.sign(
                 { id: user.id, full_name: user.full_name, role: user.role },
                 JWT_SECRET
@@ -109,12 +101,10 @@ class UserController {
         }
     }
 
-    // Выход из аккаунта (удаляем cookie)
     async LogoutUser(req, resp) {
         resp.clearCookie("token").json({ message: "Выход выполнен" })
     }
 
-    // Получение профиля текущего пользователя
     async GetMe(req, resp) {
         try {
             const payloads = getPayloads(req.cookies.token)
@@ -140,7 +130,6 @@ class UserController {
         }
     }
 
-    // Обновление имени пользователя
     async UpdateMe(req, resp) {
         try {
             const payloads = getPayloads(req.cookies.token)
@@ -161,7 +150,6 @@ class UserController {
         }
     }
 
-    // Получение списка всех пользователей (только для администратора)
     async GetAllUsers(req, resp) {
         try {
             const payloads = getPayloads(req.cookies.token)
